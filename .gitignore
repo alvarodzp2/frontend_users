@@ -1,6 +1,16 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
 
-# dependencies
+# Logs
+*.log
+
+# Mac
+.DS_Store
+
+# Node
 node_modules/
 
 # Expo
@@ -21,23 +31,19 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
-# debug
+# Debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
-.DS_Store
-*.pem
+# Env
+.env*
+.env.local
 
-# local env files
-.env*.local
-
-# typescript
+# TypeScript
 *.tsbuildinfo
 
+# Examples / generated
 app-example
-
-# generated native folders
 /ios
 /android
