@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/users";
+const API_URL = "http://TU_IP_LOCAL:3000/users";
 
 export const getUsers = async () => {
   const res = await fetch(API_URL);
