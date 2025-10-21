@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# gestión de usuarios con React Native (Expo) y Express
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Este proyecto es una aplicación móvil simple de listado y gestión de usuarios  desarrollada utilizando React Native (con Expo) para el frontend 
+## Estructura del Proyecto
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+.
+└── frontend/
+├── App.tsx              \# Componente principal y configuración de navegación
+├── src/
+│   ├── screens/
+│   │   ├── UsersListScreen.tsx \# Pantalla principal, lista de usuarios, botón FAB
+│   │   └── UserFormScreen.tsx  \# Pantalla de creación/edición de usuario
+│   ├── services/
+│   │   └── usersService.ts   \# Lógica de conexión y llamadas a la API (CRUD)
+│   └── styles/
+│       ├── listStyles.ts     \# Estilos para UsersListScreen
+│       └── formStyles.ts     \# Estilos para UserFormScreen (asumiendo su existencia)
+└── package.json
 
-## Learn more
+````
 
-To learn more about developing your project with Expo, look at the following resources:
+## Configuración y Ejecución Local
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Para ejecutar esta aplicación, primero debe iniciar el servidor backend y luego el cliente frontend.
 
-## Join the community
+###  Configuración del Frontend (React Native - Expo)
 
-Join our community of developers creating universal apps.
+El frontend debe saber dónde encontrar el backend. Esto se gestiona a través de la IP local de tu máquina, asignada a la variable de entorno `REACT_NATIVE_PACKAGER_HOSTNAME` en Windows.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1.  Abre otra terminal y navega a la carpeta del frontend:
+    ```bash
+    cd ..
+    cd frontend
+    ```
+
+2.  Instala las dependencias, incluyendo las de navegación y seguridad:
+    ```bash
+    npm install
+    # o si usas Expo: npx expo install react-native-screens @react-navigation/native @react-navigation/native-stack react-native-safe-area-context
+    ```
+
+3.  Configurar la Dirección IP Local:
+    Antes de iniciar, debes obtener la dirección IPv4 de tu red local (generalmente 192.168.x.x) y establecerla.
+
+    * **Paso A:** Ejecuta `ipconfig` en CMD y busca tu "Dirección IPv4" bajo tu adaptador de Wi-Fi o Ethernet (ej. 192.168.1.50).
+
+    * **Paso B:** Establece la IP y lanza Expo (reemplaza `TU_IP_LOCAL`):
+        ```bash
+        set REACT_NATIVE_PACKAGER_HOSTNAME=TU_IP_LOCAL & npx expo start --host lan
+        # Ejemplo: set REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.50 & npx expo start --host lan
+        ```
+
+4.  Escanea el código QR con la aplicación **Expo Go** en tu dispositivo móvil (iOS o Android) para ver la aplicación en tu red local.
+
+## Detalles de Implementación del Frontend
+
+### `App.tsx`
+Contiene la configuración del `Stack.Navigator` (`UsersList` y `UserForm`) y envuelve la aplicación en **`SafeAreaProvider`** para manejar correctamente las áreas de seguridad del dispositivo (esencial para el botón flotante).
+
+### `UsersListScreen.tsx`
+* Muestra la lista de usuarios.
+* Utiliza `FlatList` para renderizar las tarjetas de usuario.
+* Implementa el Botón de Acción Flotante (FAB) para navegar a la creación.
+* Usa el hook **`useSafeAreaInsets`** de `react-native-safe-area-context` para asegurar que el FAB esté posicionado correctamente por encima de la barra de navegación de Android.
+* Lógica para cargar y eliminar usuarios usando `usersService.ts`.
+
+### `src/services/usersService.ts`
+Contiene las funciones asíncronas para interactuar con la API backend. La URL base de la API debe estar configurada aquí (utilizando la misma `TU_IP_LOCAL` que se usó en `REACT_NATIVE_PACKAGER_HOSTNAME`).
+
+// Ejemplo de configuración de la URL base en usersService.ts
+const BASE_URL = 'http://TU_IP_LOCAL:3000/api/users'; 
+// Reemplaza TU_IP_LOCAL (ej. [http://192.168.1.50:3000/api/users](http://192.168.1.50:3000/api/users))
+
+### `src/styles/listStyles.ts`
+Define los estilos CSS-in-JS para la pantalla de lista, incluyendo el posicionamiento **`absolute`** del `addButton` que se ajusta dinámicamente en `UsersListScreen.tsx`.
+
+```
+```
